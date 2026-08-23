@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yalla Bola — get the app</title>
+<meta name="description" content="Yalla Bola keeps the score sheet for Estimation: bids, tricks, risk and doubles, worked out for you.">
+<link rel="icon" href="icon.png">
+<style>
+  :root { color-scheme: light dark;
+    --bg:#faf8f4; --surface:#fff; --text:#14171e; --dim:#5d6270; --line:#e2dcd0; --accent:#a8761e; --on:#fff; }
+  @media (prefers-color-scheme: dark) { :root {
+    --bg:#0e1116; --surface:#171b23; --text:#e9e6df; --dim:#8e96a6; --line:#2b313d; --accent:#d9a441; --on:#0e1116; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 520px; margin: 0 auto; padding: 48px 22px 64px; }
+  .mark { display: flex; align-items: center; gap: 14px; }
+  .mark img { width: 64px; height: 64px; border-radius: 16px; }
+  h1 { font-size: 28px; margin: 0; line-height: 1.15; }
+  .tag { color: var(--dim); margin: 6px 0 0; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-top: 20px; }
+  .card h2 { font-size: 13px; margin: 0 0 6px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .card p { margin: 6px 0 0; }
+  .btn { display: inline-block; margin-top: 12px; padding: 12px 18px; border-radius: 12px;
+    background: var(--accent); color: var(--on); font-weight: 700; text-decoration: none; }
+  .btn.quiet { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .note { font-size: 13.5px; color: var(--dim); }
+  footer { margin-top: 34px; font-size: 13px; color: var(--dim); }
+  footer a { color: var(--dim); }
+</style>
+</head>
+<body>
+<main>
+  <div class="mark">
+    <img src="icon.png" alt="">
+    <div>
+      <h1>Yalla Bola</h1>
+      <p class="tag">The score sheet for Estimation — every bid, every trick, every bonus.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Android</h2>
+    <p>Beta builds, direct download. The Google Play listing follows.</p>
+    <a class="btn" href="https://github.com/GITHUB_USER_PLACEHOLDER/yallabola-site/releases/latest/download/YallaBola.apk">Download the APK</a>
+    <p class="note">Android asks you to allow installing from this source the first time — the normal prompt for an app that is not yet on the Play Store. Installing over an earlier build keeps your bolas.</p>
+  </div>
+
+  <div class="card">
+    <h2>iPhone &amp; iPad</h2>
+    <p>Coming through TestFlight.</p>
+  </div>
+
+  <div class="card">
+    <h2>Got a bola link?</h2>
+    <p>Open it on a phone with the app installed and the bola opens. Without the app, install it first, then open the link again.</p>
+  </div>
+
+  <footer><a href="privacy/">Privacy</a> · <a href="terms/">Terms</a></footer>
+</main>
+</body>
+</html>
