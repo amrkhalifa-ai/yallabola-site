@@ -41,7 +41,7 @@ footer {
   color: var(--dim); font-size: .85rem;
 }
 </style></head><body><main><h1>Privacy Policy</h1>
-<p>Yalla Bola &middot; version 2026-09-terms-v3 &middot; last updated 2 September 2026</p>
+<p>Yalla Bola &middot; version 2026-09-terms-v4 &middot; last updated 4 September 2026</p>
 
 <blockquote>
 <p><strong>You can use Yalla Bola without an account, and then it collects nothing at all.</strong> No sign-in, no analytics, no advertising, nothing sent anywhere. Everything you enter stays on your phone. That mode is permanent and it is not a trial.</p>
@@ -84,6 +84,12 @@ footer {
 <p>Turn notifications off in your phone&#x27;s settings, or in the app, and the token stops being used. Deleting your account deletes every token held for you.</p>
 <p>The token is not an advertising identifier, and it is never used to build a profile of you.</p>
 
+<h2>Crash reports</h2>
+<p>When the app crashes we would like to know why, and a message saying &ldquo;it closed itself&rdquo; is not enough to fix anything. So, <strong>if you have an account</strong>, a crash sends: the error, where in the code it happened, the kind of phone and the version of the app, and your account identifier so a crash you tell us about can be found among the others.</p>
+<p><strong>It never sends your games, the names you typed, your photograph, or anything you wrote.</strong> It is a stack trace, not a recording.</p>
+<p><strong>Signed out, nothing is sent at all.</strong> Not a crash, not the kind of phone, nothing &mdash; which is what keeps the first sentence of this policy true. The switch below only has an effect once there is an account.</p>
+<p>Turn it off in <strong>Settings &rarr; Diagnostics &rarr; Send crash reports</strong>. Reports are handled by <strong>Google Firebase Crashlytics</strong> on our behalf and are kept for 90 days.</p>
+
 <h2>Cloud backup, if you turn it on</h2>
 <p>Backup is <strong>off by default</strong>. Nothing about your games leaves the phone until you switch it on in Account, and switching it off again stops any further copies being sent.</p>
 <p>With it on, we store your games &mdash; the players, the calls, the tricks won, the trumps and the rules each game was played under &mdash; along with your player list and your rule presets. Scores themselves are not stored; they are worked out from those inputs, which is why fixing a rule repairs old games rather than rewriting them.</p>
@@ -117,7 +123,7 @@ footer {
 
 <h2>What the app still does not do</h2>
 <ul>
-<li>No analytics, telemetry or behavioural tracking</li>
+<li>No analytics, no behavioural tracking, and nothing that follows you between apps. Crash reports are the one exception and they are described above &mdash; they say what broke, never what you did</li>
 <li>No advertising, and no advertising identifiers</li>
 <li>No access to your contacts or address book &mdash; the app never asks, and never will. Invitations are ordinary links you send yourself</li>
 <li>No matching of your contacts against other people&#x27;s accounts</li>
@@ -132,6 +138,7 @@ footer {
 <ul>
 <li><strong>Supabase</strong> hosts the database, the sign-in service and the photo storage. Data is stored on their infrastructure, which is outside Egypt.</li>
 <li><strong>Google Firebase Cloud Messaging</strong> delivers notifications. It receives the device token and the text of the notification.</li>
+<li><strong>Google Firebase Crashlytics</strong> receives crash reports, and only from accounts that have not switched them off.</li>
 <li><strong>Google Sign-In</strong>, only if you choose &ldquo;Continue with Google&rdquo;. Google then tells us your account identifier, email address, name and profile picture link. Google&#x27;s own handling is covered by <a href="https://policies.google.com/privacy">Google&#x27;s privacy policy</a>.</li>
 </ul>
 <p>None of them is permitted to use your data for their own purposes through us.</p>
