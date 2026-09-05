@@ -1,0 +1,90 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Yalla Bola &mdash; Email confirmed</title><style>
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f4; --surface: #fff; --text: #14171e;
+  --dim: #5d6270; --line: #e2dcd0; --accent: #a8761e;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1116; --surface: #171b23; --text: #e9e6df;
+    --dim: #8e96a6; --line: #2b313d; --accent: #d9a441;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 40px 20px; background: var(--bg); color: var(--text);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+main { max-width: 40rem; margin: 0 auto; }
+h1 { font-size: 1.85rem; line-height: 1.2; margin: 0 0 1.6rem; }
+h2 {
+  font-size: .8rem; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--accent); margin: 2.5rem 0 .6rem;
+}
+p, li { color: var(--text); }
+ul { padding-left: 1.15rem; }
+li { margin: .35rem 0; }
+blockquote {
+  background: var(--surface); border: 1px solid var(--line);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+  margin: 1.5rem 0; padding: .95rem 1.15rem;
+}
+blockquote p { margin: 0 0 .7rem; }
+blockquote p:last-child { margin-bottom: 0; }
+code {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: .1rem .3rem; font-size: .9em;
+}
+a { color: var(--accent); }
+footer {
+  margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line);
+  color: var(--dim); font-size: .85rem;
+}
+</style></head><body><main><h1 id="head">Checking&hellip;</h1>
+<div id="body">
+<p>One moment.</p>
+</div>
+<footer>Yalla Bola is a scorekeeper for the card games Estimation, Tarneeb and Trix. Questions: <a href="mailto:support@yallabola.app">support@yallabola.app</a></footer></main>
+
+<script>
+// Supabase reports the outcome in the URL fragment, which never reaches
+// the server -- so this has to be read here or not at all. Without it a
+// failed link and a successful one look identical: a page that says
+// "confirmed" to somebody whose link expired is worse than no page.
+(function () {
+  var p = new URLSearchParams(location.hash.slice(1));
+  var err = p.get('error_description') || p.get('error');
+  var code = p.get('error_code') || '';
+  var head = document.getElementById('head');
+  var body = document.getElementById('body');
+
+  if (!err) {
+    head.textContent = 'Your email is confirmed';
+    body.innerHTML =
+      '<p><strong>That is the last step.</strong> Open Yalla Bola on your ' +
+      'phone and sign in with your email and password.</p>' +
+      '<p>You can close this page.</p>';
+    return;
+  }
+
+  // Expiry is the common one by a distance, and it has a specific
+  // remedy, so it gets its own words rather than the raw message.
+  if (code.indexOf('expired') !== -1 || /expired/i.test(err)) {
+    head.textContent = 'That link has expired';
+    body.innerHTML =
+      '<p>Confirmation links do not last forever, and this one has run ' +
+      'out.</p><p><strong>Open the app and try to sign in.</strong> It will ' +
+      'offer to send a fresh one.</p>';
+    return;
+  }
+
+  head.textContent = 'That link did not work';
+  body.innerHTML =
+    '<p>' + err.replace(/[<>&]/g, '') + '</p>' +
+    '<p>Open the app and try to sign in &mdash; it will offer to send ' +
+    'another link. If it keeps failing, write to ' +
+    '<a href="mailto:support@yallabola.app">support@yallabola.app</a> and ' +
+    'we will sort it out.</p>';
+})();
+</script>
+</body></html>
