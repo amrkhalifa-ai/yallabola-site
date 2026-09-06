@@ -8,6 +8,27 @@ Four static pages, no build step:
 | `/g/?t=TOKEN` | Open a shared bola — tries the app, falls back to the get page, shows the pasteable code |
 | `/privacy/` | Privacy policy (the same text as in the app) |
 | `/terms/` | Terms |
+| `/admin/` | The numbers — moderators only, see the note below |
+
+## The `/admin/` page, and why a public URL is the right place for it
+
+It reads the whole dashboard out of Supabase and draws it. Two things
+about that are worth being explicit, because both look wrong at first:
+
+**The page and its key are public, deliberately.** Anyone can fetch the
+HTML and read the publishable key out of it — exactly as anyone can
+unzip the APK and find the same two strings, which is where they have
+always lived. Every figure comes from a `security definer` function that
+begins by refusing anybody who is not in `public.moderators`, returning
+`42501`. The boundary is the database, not the secrecy of a URL.
+
+**It is `noindex, nofollow` but that is tidiness, not security.** If you
+want a second lock, put Cloudflare Access in front of the path; it is
+free up to fifty users and changes nothing about how the page works.
+
+Deploying it is a decision, not a step: everything else in this folder is
+for players, and this one is for you. It is safe to publish and it is
+also fine to leave unpublished and open from a local server when needed.
 
 ## Publish on GitHub Pages (about five minutes)
 

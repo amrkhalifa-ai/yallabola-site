@@ -1,0 +1,1183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Yalla Bola — the numbers</title>
+<link rel="icon" href="../icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* The palette is the app's own, from lib/core/theme.dart, so this page,
+   docs/backlog.html and the product agree on what brass, jade and rose
+   mean. The chart slots are stepped to pass the contrast and
+   colour-vision checks against each surface — the interface accent sits
+   outside the band in dark, which is why the dark marks differ. */
+:root {
+  --bg:#FAF8F4; --surface:#FFFFFF; --surface2:#F1EDE5; --line:#E2DCD0;
+  --line2:#EDE7DC; --text:#14171E; --dim:#5D6270;
+  --accent:#A8761E; --accentWash:#F6EBD6;
+  --jade:#1F7A5C; --jadeWash:#E1F0EA;
+  --rose:#A83440; --roseWash:#F7E4E4;
+  --sky:#2A6FB8; --skyWash:#E1ECF7;
+  --shadow:0 1px 2px rgba(20,23,30,.05), 0 8px 24px rgba(20,23,30,.05);
+  --c1:#A8761E; --c2:#2A6FB8; --c3:#9A3F86;
+  --s1:#FAF1E1; --s2:#F0DCB4; --s3:#E0BE7C; --s4:#C89A45; --s5:#A8761E;
+  --grid:#E8E2D6; --onfill:#FFFFFF;
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --body:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0E1116; --surface:#171B23; --surface2:#1F242F; --line:#2B313D;
+    --line2:#232936; --text:#E9E6DF; --dim:#8E96A6;
+    --accent:#D9A441; --accentWash:#2E2411;
+    --jade:#46B98C; --jadeWash:#122A22;
+    --rose:#E0616C; --roseWash:#2E1619;
+    --sky:#5FA8E6; --skyWash:#12232F;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    --c1:#BE8A30; --c2:#4A8FCB; --c3:#B84E84;
+    --s1:#241C0E; --s2:#3D2F13; --s3:#6B5220; --s4:#97742C; --s5:#BE8A30;
+    --grid:#262C38; --onfill:#10131A;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0E1116; --surface:#171B23; --surface2:#1F242F; --line:#2B313D;
+  --line2:#232936; --text:#E9E6DF; --dim:#8E96A6;
+  --accent:#D9A441; --accentWash:#2E2411;
+  --jade:#46B98C; --jadeWash:#122A22;
+  --rose:#E0616C; --roseWash:#2E1619;
+  --sky:#5FA8E6; --skyWash:#12232F;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  --c1:#BE8A30; --c2:#4A8FCB; --c3:#B84E84;
+  --s1:#241C0E; --s2:#3D2F13; --s3:#6B5220; --s4:#97742C; --s5:#BE8A30;
+  --grid:#262C38; --onfill:#10131A;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--body);
+  font-size:15px;line-height:1.6;margin:0;padding:0 18px 80px;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto}
+
+header.top{padding:26px 0 18px;border-bottom:2px solid var(--text);
+  display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:26px;
+  letter-spacing:-.02em;margin:0;flex:1 1 auto}
+.brand small{display:block;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+  font-weight:600;margin-bottom:2px}
+
+/* One filter row, above everything it scopes. Never a control inside a
+   card: every chart on the page re-renders against the same slice. */
+.filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button{font:inherit;font-size:12.5px;cursor:pointer;border-radius:7px;
+  border:1px solid var(--line);background:var(--surface);color:var(--text);
+  padding:6px 12px}
+button:hover{border-color:var(--accent)}
+button[aria-pressed="true"]{background:var(--accentWash);
+  border-color:var(--accent);color:var(--accent);font-weight:600}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accent);
+  outline-offset:2px}
+.ghost{background:transparent;color:var(--dim)}
+
+.caveat{margin:16px 0 0;padding:12px 14px;background:var(--accentWash);
+  border:1px solid var(--accent);border-radius:8px;font-size:13px;
+  color:var(--text);line-height:1.5}
+.stale{opacity:.45;transition:opacity .15s}
+
+h2{font-family:var(--display);font-weight:700;font-size:19px;
+  letter-spacing:-.01em;margin:0 0 3px}
+.bid{font-family:var(--mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;color:var(--accent)}
+.asks{color:var(--dim);font-size:13px;margin:0 0 14px;max-width:70ch}
+section{padding-top:34px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  box-shadow:var(--shadow);overflow:hidden}
+.card>header{padding:13px 16px 10px;display:flex;align-items:baseline;
+  gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--line2)}
+.card>header h3{font-family:var(--display);font-weight:700;font-size:14px;
+  margin:0;flex:1 1 auto}
+.card .body{padding:14px 16px 16px}
+.note{font-size:12px;color:var(--dim);line-height:1.5;margin:10px 0 0}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:9px;
+  padding:11px 13px}
+.tile .n{font-size:26px;font-weight:700;line-height:1.05}
+.tile .n.bad{color:var(--rose)}
+.tile .n.good{color:var(--jade)}
+.tile .c{font-size:11.5px;color:var(--dim);margin-top:2px}
+.tile .d{font-size:11px;margin-top:3px;font-family:var(--mono)}
+.tile .d.up{color:var(--jade)} .tile .d.down{color:var(--rose)}
+
+.alarm{background:var(--roseWash);border:1px solid var(--rose);
+  border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.alarm h3{color:var(--rose);margin:0 0 5px;font-size:15px;
+  font-family:var(--display)}
+.alarm p{margin:0;font-size:13px;color:var(--dim);line-height:1.5}
+.calm{background:var(--jadeWash);border-color:var(--jade)}
+.calm h3{color:var(--jade)}
+
+svg.chart{display:block;width:100%;height:auto;overflow:visible}
+.ax{fill:var(--dim);font-family:var(--mono);font-size:10px}
+.axb{fill:var(--text);font-family:var(--body);font-size:11.5px;font-weight:600}
+.val{fill:var(--text);font-family:var(--body);font-size:11.5px;font-weight:600}
+.onf{fill:var(--onfill);font-family:var(--mono);font-size:10px;font-weight:600}
+.gl{stroke:var(--grid);stroke-width:1}
+.f1{fill:var(--c1)} .f2{fill:var(--c2)} .f3{fill:var(--c3)}
+.l1{stroke:var(--c1)} .l2{stroke:var(--c2)} .l3{stroke:var(--c3)}
+.ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.ring{stroke:var(--surface);stroke-width:2}
+.q0{fill:var(--surface2)} .q1{fill:var(--s1)} .q2{fill:var(--s2)}
+.q3{fill:var(--s3)} .q4{fill:var(--s4)} .q5{fill:var(--s5)}
+.hit{fill:transparent;cursor:crosshair}
+
+.keys{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12px;
+  color:var(--dim)}
+.key{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:2px;flex:none}
+.ramp{display:inline-flex;gap:2px;vertical-align:middle}
+.ramp i{width:18px;height:9px;border-radius:1px}
+
+.tip{position:fixed;pointer-events:none;z-index:50;background:var(--surface);
+  border:1px solid var(--line);border-radius:7px;padding:7px 10px;
+  font-size:12px;box-shadow:var(--shadow);opacity:0;transition:opacity .1s;
+  font-variant-numeric:tabular-nums;max-width:240px}
+.tip.on{opacity:1}
+.tip b{font-weight:600}
+
+table{border-collapse:collapse;width:100%;font-size:12.5px;
+  font-variant-numeric:tabular-nums}
+th{text-align:left;font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dim);
+  padding:7px 10px;border-bottom:1px solid var(--line)}
+td{padding:6px 10px;border-bottom:1px solid var(--line2)}
+tr:last-child td{border-bottom:none}
+.tablewrap{overflow-x:auto;max-height:320px;overflow-y:auto;margin-top:10px;
+  border:1px solid var(--line2);border-radius:8px}
+[hidden]{display:none!important}
+
+.gate{max-width:420px;margin:14vh auto 0;text-align:center}
+.gate h1{font-family:var(--display);font-size:28px;margin:0 0 6px}
+.gate p{color:var(--dim);font-size:14px;margin:0 0 20px}
+.gate .row{display:flex;flex-direction:column;gap:10px}
+.gate input{font:inherit;font-size:14px;padding:10px 12px;border-radius:8px;
+  border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.gate button{padding:10px 14px;font-size:14px}
+.msg{font-size:13px;margin-top:14px;min-height:20px}
+.msg.err{color:var(--rose)} .msg.ok{color:var(--jade)}
+.empty{color:var(--dim);font-size:13px;padding:18px 0;text-align:center}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<!-- ------------------------------------------------------------ sign in -->
+<div class="wrap" id="gate" hidden>
+  <div class="gate">
+    <h1>The numbers</h1>
+    <p>
+      Moderators only. This page holds nothing itself — every figure comes
+      from a database function that refuses anybody else.
+    </p>
+    <div class="row">
+      <button id="google">Continue with Google</button>
+      <input id="email" type="email" placeholder="or your email address"
+             autocomplete="email" aria-label="Email address">
+      <button id="magic" class="ghost">Email me a sign-in link</button>
+    </div>
+    <p class="msg" id="gateMsg"></p>
+  </div>
+</div>
+
+<!-- --------------------------------------------------------------- board -->
+<div class="wrap" id="board" hidden>
+  <header class="top">
+    <h1 class="brand"><small>Yalla Bola</small>The numbers</h1>
+    <div class="filters" role="group" aria-label="Time window">
+      <button data-days="30">30 days</button>
+      <button data-days="90" aria-pressed="true">90 days</button>
+      <button data-days="180">180 days</button>
+      <button data-days="365">A year</button>
+      <button id="reload" class="ghost" title="Reload">Refresh</button>
+      <button id="signout" class="ghost">Sign out</button>
+    </div>
+  </header>
+
+  <p class="caveat" id="caveat"></p>
+  <p class="msg err" id="err"></p>
+
+  <div id="boards"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var URL_ = "https://lqowpeblmtwylerujkje.supabase.co";
+  // The publishable key. It is in the page because it is in every copy of
+  // the app too — protection is is_moderator() inside each function,
+  // returning 42501, never the secrecy of this string.
+  var KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3dwZWJsbXR3eWxlcnVqa2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5OTAzODAsImV4cCI6MjEwMjU2NjM4MH0.CPKLHtXjUViMxypMz5xoCRjsovZaYRuzNZ-tmYuQY_8";
+
+  var sb = window.supabase.createClient(URL_, KEY, {
+    auth: { detectSessionInUrl: true, persistSession: true }
+  });
+
+  var $ = function (id) { return document.getElementById(id); };
+  var days = 90, data = null, loading = false;
+
+  // ---------------------------------------------------------- utilities
+  function el(tag, cls, txt) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt !== undefined) n.textContent = txt;
+    return n;
+  }
+  function svgEl(tag, attrs) {
+    var n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) if (attrs[k] !== null && attrs[k] !== undefined) {
+      n.setAttribute(k, attrs[k]);
+    }
+    return n;
+  }
+  function num(v) {
+    if (v === null || v === undefined) return "—";
+    return Number(v).toLocaleString();
+  }
+  // A dash, never a zero. A percentage of nothing is undefined, and
+  // drawing it as 0% reads as a real and alarming measurement.
+  function pct(v) {
+    return (v === null || v === undefined) ? "—" : Number(v).toFixed(1) + "%";
+  }
+  function hours(v) {
+    return (v === null || v === undefined) ? "—" : Number(v).toFixed(1) + "h";
+  }
+  function shortDay(iso) {
+    var d = new Date(iso + "T00:00:00Z");
+    return d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  }
+
+  // ------------------------------------------------------------- tooltip
+  var tip = $("tip");
+  function showTip(evt, html) {
+    tip.innerHTML = html;
+    tip.classList.add("on");
+    var pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    var x = evt.clientX + pad, y = evt.clientY + pad;
+    if (x + w > window.innerWidth - 8) x = evt.clientX - w - pad;
+    if (y + h > window.innerHeight - 8) y = evt.clientY - h - pad;
+    tip.style.left = x + "px";
+    tip.style.top = y + "px";
+  }
+  function hideTip() { tip.classList.remove("on"); }
+  document.addEventListener("scroll", hideTip, true);
+
+  // Every mark gets a hit target at least this wide, so hovering is not
+  // a test of aim.
+  function hoverable(node, html) {
+    node.addEventListener("mousemove", function (e) { showTip(e, html); });
+    node.addEventListener("mouseleave", hideTip);
+    node.setAttribute("tabindex", "0");
+    node.addEventListener("focus", function (e) {
+      var r = node.getBoundingClientRect();
+      showTip({ clientX: r.left + r.width / 2, clientY: r.top }, html);
+    });
+    node.addEventListener("blur", hideTip);
+    return node;
+  }
+
+  // ------------------------------------------------------- chart pieces
+  function chart(h, w) {
+    w = w || 700;
+    var s = svgEl("svg", { "class": "chart", viewBox: "0 0 " + w + " " + h,
+                           role: "img" });
+    s.__w = w; s.__h = h;
+    return s;
+  }
+  function text(s, x, y, str, cls, anchor) {
+    var t = svgEl("text", { x: x, y: y, "class": cls || "ax",
+                            "text-anchor": anchor || "start" });
+    t.textContent = str;
+    s.appendChild(t);
+    return t;
+  }
+  // Rounded at the data end, square at the baseline.
+  function hbar(x, y, w, h, r) {
+    r = Math.min(r === undefined ? 4 : r, w / 2, h / 2);
+    if (w <= 1) return svgEl("rect", { x: x, y: y, width: 1, height: h });
+    return svgEl("path", { d: "M" + x + " " + y + " H" + (x + w - r) +
+      " a" + r + " " + r + " 0 0 1 " + r + " " + r +
+      " V" + (y + h - r) + " a" + r + " " + r + " 0 0 1 " + (-r) + " " + r +
+      " H" + x + " Z" });
+  }
+  function vbar(x, y, w, h, r) {
+    r = Math.min(r === undefined ? 4 : r, w / 2, Math.max(h, 1) / 2);
+    if (h <= 1) return svgEl("rect", { x: x, y: y + h - 1, width: w, height: 1 });
+    return svgEl("path", { d: "M" + x + " " + (y + h) + " V" + (y + r) +
+      " a" + r + " " + r + " 0 0 1 " + r + " " + (-r) + " H" + (x + w - r) +
+      " a" + r + " " + r + " 0 0 1 " + r + " " + r + " V" + (y + h) + " Z" });
+  }
+  function rampClass(v, max) {
+    if (!max || v === 0) return "q0";
+    return "q" + Math.max(1, Math.min(5, Math.ceil(v * 5 / max)));
+  }
+
+  // A descending funnel. Ordinal ramp, because the stages are ordered.
+  function funnel(rows, opts) {
+    opts = opts || {};
+    var rowh = 26, gap = 10, top = 8, LX = 130, BX = LX + 8, BW = 380;
+    var s = chart(top + rows.length * (rowh + gap) + 4);
+    var max = rows[0] ? rows[0].value : 0;
+    rows.forEach(function (r, i) {
+      var y = top + i * (rowh + gap);
+      var w = max ? Math.max(BW * r.value / max, 1) : 1;
+      text(s, LX, y + rowh / 2 + 4, r.label, "axb", "end");
+      var g = svgEl("g", { "class": "q" + Math.max(1, 5 - Math.floor(i * 5 / rows.length)) });
+      g.appendChild(hbar(BX, y, w, rowh));
+      hoverable(g, "<b>" + r.label + "</b><br>" + num(r.value) +
+        (max ? " · " + (100 * r.value / max).toFixed(0) + "% of stage one" : ""));
+      s.appendChild(g);
+      text(s, BX + w + 10, y + rowh / 2 + 4, num(r.value), "val");
+      if (r.drop) text(s, BX + w + 58, y + rowh / 2 + 4, r.drop, "ax");
+    });
+    return s;
+  }
+
+  // Lines on one shared axis. Never two y-scales: the alignment would be
+  // arbitrary and the chart would invent a correlation.
+  function lines(seriesList, labels, opts) {
+    opts = opts || {};
+    var PX = 44, PY = 14, PW = 600, PH = opts.height || 150;
+    // 140 of reserve on the right, not 80: the end labels are series
+    // names ("scorekeeper only"), and the card clips its overflow, so a
+    // label that runs past the viewBox is a label with its tail cut off.
+    var s = chart(PY + PH + 30, PX + PW + 140);
+    var all = [];
+    seriesList.forEach(function (ser) {
+      ser.points.forEach(function (p) { if (p.y !== null) all.push(p.y); });
+    });
+    if (!all.length) return null;
+    var hi = opts.max !== undefined ? opts.max : Math.max.apply(null, all) * 1.12 || 1;
+    var lo = opts.min !== undefined ? opts.min : 0;
+    var n = labels.length;
+    var sx = function (i) { return PX + (n > 1 ? PW * i / (n - 1) : PW / 2); };
+    var sy = function (v) { return PY + PH - PH * (v - lo) / (hi - lo || 1); };
+
+    for (var t = 0; t <= 4; t++) {
+      var v = lo + (hi - lo) * t / 4;
+      s.appendChild(svgEl("line", { "class": "gl", x1: PX, y1: sy(v),
+                                    x2: PX + PW, y2: sy(v) }));
+      text(s, PX - 8, sy(v) + 3.5, opts.percent ? Math.round(v) + "%" :
+           Math.round(v).toLocaleString(), "ax", "end");
+    }
+    var step = Math.max(1, Math.ceil(n / 8));
+    labels.forEach(function (lab, i) {
+      if (i % step === 0 || i === n - 1) {
+        text(s, sx(i), PY + PH + 17, lab, "ax", "middle");
+      }
+    });
+    seriesList.forEach(function (ser, k) {
+      var d = "", started = false;
+      ser.points.forEach(function (p, i) {
+        if (p.y === null) return;
+        d += (started ? "L" : "M") + sx(i) + " " + sy(p.y);
+        started = true;
+      });
+      if (d) s.appendChild(svgEl("path", { "class": "ln l" + (k + 1), d: d }));
+      var last = null;
+      for (var i = ser.points.length - 1; i >= 0; i--) {
+        if (ser.points[i].y !== null) { last = i; break; }
+      }
+      if (last !== null) {
+        s.appendChild(svgEl("circle", { "class": "f" + (k + 1) + " ring",
+          cx: sx(last), cy: sy(ser.points[last].y), r: 4.5 }));
+        text(s, sx(last) + 11, sy(ser.points[last].y) + 4, ser.name, "val");
+      }
+    });
+    // One crosshair column per x, wide enough to hit.
+    labels.forEach(function (lab, i) {
+      var half = n > 1 ? PW / (n - 1) / 2 : PW / 2;
+      var rect = svgEl("rect", { "class": "hit", x: sx(i) - half, y: PY,
+                                 width: half * 2, height: PH });
+      var html = "<b>" + lab + "</b>";
+      seriesList.forEach(function (ser) {
+        var p = ser.points[i];
+        html += "<br>" + ser.name + ": " +
+          (p && p.y !== null ? (opts.percent ? p.y.toFixed(1) + "%" : num(p.y))
+                             : "—");
+      });
+      hoverable(rect, html);
+      s.appendChild(rect);
+    });
+    return s;
+  }
+
+  function columns(rows, opts) {
+    opts = opts || {};
+    var PX = 46, PY = 14, PW = 580, PH = opts.height || 120;
+    var s = chart(PY + PH + 30, PX + PW + 20);
+    var max = Math.max.apply(null, rows.map(function (r) { return r.value; }));
+    if (!isFinite(max) || max <= 0) max = 1;
+    for (var t = 0; t <= 2; t++) {
+      var v = max * t / 2;
+      s.appendChild(svgEl("line", { "class": "gl", x1: PX, y1: PY + PH - PH * t / 2,
+                                    x2: PX + PW, y2: PY + PH - PH * t / 2 }));
+      text(s, PX - 8, PY + PH - PH * t / 2 + 3.5, Math.round(v).toLocaleString(),
+           "ax", "end");
+    }
+    var slot = PW / rows.length, cw = Math.min(24, slot - 3);
+    rows.forEach(function (r, i) {
+      var h = PH * r.value / max;
+      var g = svgEl("g", { "class": opts.cls || "f1" });
+      g.appendChild(vbar(PX + i * slot + (slot - cw) / 2, PY + PH - h, cw, h));
+      hoverable(g, "<b>" + r.label + "</b><br>" + num(r.value));
+      s.appendChild(g);
+    });
+    var step = Math.max(1, Math.ceil(rows.length / 8));
+    rows.forEach(function (r, i) {
+      if (i % step === 0 || i === rows.length - 1) {
+        text(s, PX + i * slot + slot / 2, PY + PH + 17, r.label, "ax", "middle");
+      }
+    });
+    return s;
+  }
+
+  function stacked(labels, series) {
+    var PX = 46, PY = 14, PW = 560, PH = 150;
+    var s = chart(PY + PH + 30, PX + PW + 20);
+    var totals = labels.map(function (_, i) {
+      return series.reduce(function (a, ser) { return a + (ser.values[i] || 0); }, 0);
+    });
+    var max = Math.max.apply(null, totals) || 1;
+    for (var t = 0; t <= 2; t++) {
+      s.appendChild(svgEl("line", { "class": "gl", x1: PX, y1: PY + PH - PH * t / 2,
+                                    x2: PX + PW, y2: PY + PH - PH * t / 2 }));
+      text(s, PX - 8, PY + PH - PH * t / 2 + 3.5,
+           Math.round(max * t / 2).toLocaleString(), "ax", "end");
+    }
+    var slot = PW / labels.length, cw = Math.min(40, slot - 6);
+    labels.forEach(function (lab, i) {
+      var y = PY + PH, x = PX + i * slot + (slot - cw) / 2;
+      series.forEach(function (ser, k) {
+        var v = ser.values[i] || 0;
+        if (!v) return;
+        var h = PH * v / max;
+        y -= h;
+        var g = svgEl("g", { "class": "f" + (k + 1) });
+        // The 2px separation is the surface showing through, not a stroke
+        // drawn round the mark.
+        g.appendChild(k === series.length - 1
+          ? vbar(x, y, cw, h)
+          : svgEl("rect", { x: x, y: y + 1, width: cw, height: Math.max(h - 2, 0.5) }));
+        hoverable(g, "<b>" + lab + "</b><br>" + ser.name + ": " + num(v) +
+          "<br>share: " + (totals[i] ? (100 * v / totals[i]).toFixed(0) : 0) + "%");
+        s.appendChild(g);
+      });
+      text(s, x + cw / 2, PY + PH + 17, lab, "ax", "middle");
+    });
+    return s;
+  }
+
+  function heatmap(cells) {
+    var days_ = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var bands = ["before 4pm", "4–6pm", "6–8pm", "8–10pm", "after 10pm"];
+    var LX = 92, CX = 100, cw = 80, ch = 28, g = 2, top = 20;
+    var s = chart(top + bands.length * (ch + g) + 6, CX + 7 * (cw + g));
+    var max = 0, grid = {};
+    cells.forEach(function (c) {
+      grid[c.dow + ":" + c.band] = c.n;
+      if (c.n > max) max = c.n;
+    });
+    days_.forEach(function (d, j) {
+      text(s, CX + j * (cw + g) + cw / 2, 13, d, "ax", "middle");
+    });
+    bands.forEach(function (b, i) {
+      var y = top + i * (ch + g);
+      text(s, LX - 10, y + ch / 2 + 3.5, b, "ax", "end");
+      for (var j = 0; j < 7; j++) {
+        var v = grid[j + ":" + i] || 0;
+        var r = svgEl("rect", { "class": rampClass(v, max), x: CX + j * (cw + g),
+                                y: y, width: cw, height: ch, rx: 2 });
+        hoverable(r, "<b>" + days_[j] + " · " + b + "</b><br>" +
+                  num(v) + " bola" + (v === 1 ? "" : "s"));
+        s.appendChild(r);
+        if (v >= max * 0.6 && v > 0) {
+          text(s, CX + j * (cw + g) + cw / 2, y + ch / 2 + 3.5, String(v),
+               "onf", "middle");
+        }
+      }
+    });
+    return s;
+  }
+
+  function cohortGrid(rows, weeks) {
+    var LX = 108, CX = 116, cw = 62, ch = 25, g = 2, top = 20;
+    var cols = Math.min(weeks + 1, 9);
+    var s = chart(top + rows.length * (ch + g) + 6, CX + cols * (cw + g));
+    for (var j = 0; j < cols; j++) {
+      text(s, CX + j * (cw + g) + cw / 2, 13, "W" + j, "ax", "middle");
+    }
+    rows.forEach(function (r, i) {
+      var y = top + i * (ch + g);
+      text(s, LX - 10, y + ch / 2 + 3.5, shortDay(r.cohort), "ax", "end");
+      for (var j = 0; j < cols; j++) {
+        var x = CX + j * (cw + g);
+        var wk = (r.weeks || []).filter(function (w) { return w.w === j; })[0];
+        if (!wk) {
+          s.appendChild(svgEl("rect", { "class": "q0", x: x, y: y, width: cw,
+                                        height: ch, rx: 2, opacity: ".45" }));
+          continue;
+        }
+        var p = r.size ? 100 * wk.people / r.size : 0;
+        var rect = svgEl("rect", { "class": rampClass(p, 100), x: x, y: y,
+                                   width: cw, height: ch, rx: 2 });
+        hoverable(rect, "<b>" + shortDay(r.cohort) + " · week " + j +
+          "</b><br>" + wk.people + " of " + r.size + " (" + p.toFixed(0) + "%)");
+        s.appendChild(rect);
+        text(s, x + cw / 2, y + ch / 2 + 3.5, Math.round(p) + "",
+             p >= 60 ? "onf" : "ax", "middle");
+      }
+    });
+    return s;
+  }
+
+  // ------------------------------------------------------------- layout
+  function card(title, asks, node, extras) {
+    var c = el("div", "card");
+    var h = el("header");
+    h.appendChild(el("h3", null, title));
+    if (extras) extras.forEach(function (e) { h.appendChild(e); });
+    c.appendChild(h);
+    var b = el("div", "body");
+    if (node) b.appendChild(node); else b.appendChild(el("p", "empty", "Nothing yet."));
+    if (asks) b.appendChild(el("p", "note", asks));
+    c.appendChild(b);
+    return c;
+  }
+
+  // Every chart has a table twin, so no value is reachable only by
+  // pointing at it.
+  function withTable(node, headers, rows) {
+    var box = el("div");
+    if (node) box.appendChild(node);
+    var btn = el("button", "ghost", "Show the table");
+    btn.style.marginTop = "10px";
+    btn.setAttribute("aria-expanded", "false");
+    var wrap = el("div", "tablewrap");
+    wrap.hidden = true;
+    var t = el("table");
+    var thead = el("thead"), tr = el("tr");
+    headers.forEach(function (h) { tr.appendChild(el("th", null, h)); });
+    thead.appendChild(tr); t.appendChild(thead);
+    var tb = el("tbody");
+    rows.forEach(function (r) {
+      var row = el("tr");
+      r.forEach(function (v) { row.appendChild(el("td", null, v)); });
+      tb.appendChild(row);
+    });
+    t.appendChild(tb); wrap.appendChild(t);
+    btn.addEventListener("click", function () {
+      wrap.hidden = !wrap.hidden;
+      btn.textContent = wrap.hidden ? "Show the table" : "Hide the table";
+      btn.setAttribute("aria-expanded", String(!wrap.hidden));
+    });
+    box.appendChild(btn);
+    box.appendChild(wrap);
+    return box;
+  }
+
+  function tile(value, caption, cls, delta) {
+    var t = el("div", "tile");
+    t.appendChild(el("div", "n" + (cls ? " " + cls : ""), value));
+    t.appendChild(el("div", "c", caption));
+    if (delta) t.appendChild(el("div", "d " + delta.dir, delta.text));
+    return t;
+  }
+
+  function section(id, title, asks) {
+    var s = el("section");
+    s.id = "board-" + id;
+    s.appendChild(el("div", "bid", id.toUpperCase()));
+    s.appendChild(el("h2", null, title));
+    s.appendChild(el("p", "asks", asks));
+    return s;
+  }
+
+  function keys(pairs) {
+    var k = el("div", "keys");
+    pairs.forEach(function (p) {
+      var s = el("span", "key");
+      var d = el("i", "dot");
+      d.style.background = "var(--" + p[0] + ")";
+      s.appendChild(d);
+      s.appendChild(document.createTextNode(p[1]));
+      k.appendChild(s);
+    });
+    return k;
+  }
+  function rampKey(lo, hi) {
+    var k = el("div", "keys"), s = el("span", "key");
+    s.appendChild(document.createTextNode(lo));
+    var r = el("span", "ramp");
+    for (var i = 1; i <= 5; i++) {
+      var b = el("i");
+      b.style.background = "var(--s" + i + ")";
+      r.appendChild(b);
+    }
+    s.appendChild(r);
+    s.appendChild(document.createTextNode(hi));
+    k.appendChild(s);
+    return k;
+  }
+
+  // ---------------------------------------------------------- the render
+  function render(d) {
+    var root = $("boards");
+    root.innerHTML = "";
+    $("caveat").textContent = d.caveat +
+      (d.loggingSince ? "  Behaviour has been recorded since " +
+        shortDay(d.loggingSince) + "; nothing before that is in this database."
+      : "");
+
+    root.appendChild(boardA(d));
+    root.appendChild(boardB(d));
+    root.appendChild(boardC(d));
+    root.appendChild(boardD(d));
+    root.appendChild(boardE(d));
+    root.appendChild(boardF(d));
+    root.appendChild(boardG(d));
+    root.appendChild(boardH(d));
+  }
+
+  function boardA(d) {
+    var s = section("a", "Tonight",
+      "Anything on fire, and anything waiting for a person. Everything " +
+      "that needs somebody comes before anything merely interesting.");
+    var h = (d.push && d.push.health) || {};
+    var events = h.eventsToday || 0;
+    var calls = h.day && h.day.unavailable ? null
+              : (h.day ? h.day.calls : null);
+    var failed = h.day && h.day.unavailable ? null
+               : (h.day ? h.day.failed : null);
+    var silent = h.configured && events > 0 && calls === 0;
+    var rate = (calls && failed !== null) ? 100 * failed / calls : null;
+
+    var alarm = el("div", "alarm" + (silent || (rate !== null && rate >= 30) ? "" : " calm"));
+    if (silent) {
+      alarm.appendChild(el("h3", null, "Notifications are not being sent"));
+      alarm.appendChild(el("p", null, events + " were written today and not one " +
+        "delivery was attempted. The webhook is not firing — check the " +
+        "database webhook under Integrations, and that the Edge Function is " +
+        "deployed. The app itself is unaffected: every notification is a " +
+        "nudge on top of an inbox row that already exists."));
+    } else if (rate !== null && rate >= 30) {
+      alarm.appendChild(el("h3", null, "Notifications are failing"));
+      alarm.appendChild(el("p", null, Math.round(rate) + "% of delivery attempts " +
+        "failed in the last day. Check the Edge Function logs and that " +
+        "FCM_SERVICE_ACCOUNT is still valid."));
+    } else {
+      alarm.appendChild(el("h3", null, "The push path is alive"));
+      alarm.appendChild(el("p", null, num(events) + " written today, " +
+        num(calls) + " delivery attempts, " + num(failed) + " failed. " +
+        (calls === null ? "A dash means pg_net's response table could not be " +
+          "read — an unknown, not an outage." : "")));
+    }
+    s.appendChild(alarm);
+
+    var t = el("div", "tiles");
+    var tr = d.trust || {}, lq = d.liquidity || {};
+    t.appendChild(tile(num(tr.pipeline ? tr.pipeline.stillWaiting : 0),
+      "allegations still open", tr.pipeline && tr.pipeline.stillWaiting ? "bad" : ""));
+    t.appendChild(tile(num(tr.suspendedNow), "suspended right now"));
+    t.appendChild(tile(num(lq.atRiskNow), "starting in 3h, seats unfilled",
+      lq.atRiskNow ? "bad" : ""));
+    t.appendChild(tile(hours(tr.medianDecisionHours),
+      "median time to decide a report"));
+    s.appendChild(t);
+    return s;
+  }
+
+  function boardB(d) {
+    var s = section("b", "The bola lifecycle",
+      "Where bolas die. Both state machines are real and every transition " +
+      "is logged, so this funnel needs nothing that is not already recorded.");
+    var L = (d.lifecycle && d.lifecycle.listings) || {};
+    var S = (d.lifecycle && d.lifecycle.seats) || {};
+    var lrows = [
+      { label: "Published", value: L.published || 0 },
+      { label: "Filled", value: L.filled || 0 },
+      { label: "Confirmed", value: L.confirmed || 0 },
+      { label: "Started", value: L.started || 0 },
+      { label: "Played", value: L.played || 0 },
+      { label: "Verified", value: L.verified || 0 }
+    ];
+    // Label the worst drop only. A number against every stage is read by
+    // nobody.
+    var worst = -1, worstAt = -1;
+    for (var i = 1; i < lrows.length; i++) {
+      var lost = lrows[i - 1].value - lrows[i].value;
+      if (lost > worst) { worst = lost; worstAt = i; }
+    }
+    if (worstAt > 0 && lrows[worstAt - 1].value) {
+      lrows[worstAt].drop = "−" +
+        Math.round(100 * worst / lrows[worstAt - 1].value) + "% here";
+    }
+    var srows = [
+      { label: "Asked for a seat", value: S.asked || 0 },
+      { label: "Approved", value: S.approved || 0 },
+      { label: "Confirmed", value: S.confirmed || 0 },
+      { label: "Turned up", value: S.attended || 0 }
+    ];
+
+    var cards = el("div", "cards");
+    cards.appendChild(card("Listings · the supply side", null,
+      withTable(funnel(lrows), ["Stage", "Listings"],
+                lrows.map(function (r) { return [r.label, num(r.value)]; }))));
+    cards.appendChild(card("Seats · the demand side",
+      "A bola that filled says nothing about the people who asked and were " +
+      "declined, which is why this is a second funnel and not a column of " +
+      "the first.",
+      withTable(funnel(srows), ["Stage", "Seats"],
+                srows.map(function (r) { return [r.label, num(r.value)]; }))));
+    s.appendChild(cards);
+
+    var t = el("div", "tiles");
+    t.style.marginTop = "14px";
+    t.appendChild(tile(num(L.diedUnfilled), "died unfilled",
+      L.diedUnfilled ? "bad" : ""));
+    t.appendChild(tile(num(L.cancelledAfterFilling), "cancelled after filling"));
+    t.appendChild(tile(num(S.noShow), "did not turn up"));
+    t.appendChild(tile(num(S.withdrew), "withdrew"));
+    s.appendChild(t);
+    return s;
+  }
+
+  function boardC(d) {
+    var lq = d.liquidity || {};
+    var s = section("c", "Liquidity",
+      "Whether there is supply where the demand is. A listing that dies " +
+      "unfilled is worse than no listing, because it cost a host the trouble.");
+
+    var t = el("div", "tiles");
+    var f = lq.seatFill || {}, u = lq.showUp || {};
+    t.appendChild(tile(pct(f.now), "seats filled", null, deltaOf(f.now, f.prev)));
+    t.appendChild(tile(pct(u.now), "turned up", null, deltaOf(u.now, u.prev)));
+    t.appendChild(tile(hours(lq.medianHoursToFill), "median time to fill"));
+    t.appendChild(tile(num(lq.repeatHosts) + " of " + num(lq.hosts), "hosts who came back"));
+    t.appendChild(tile(num(lq.unmetDemand), "asked and never seated"));
+    s.appendChild(t);
+
+    var cards = el("div", "cards");
+    cards.style.marginTop = "14px";
+    var cells = lq.heatmap || [];
+    var hm = cells.length ? heatmap(cells) : null;
+    var box = el("div");
+    if (hm) { box.appendChild(hm); box.appendChild(rampKey("quiet", "busiest")); }
+    cards.appendChild(card("When people actually play",
+      "District is the dimension this cannot fit; filter by it above rather " +
+      "than adding an axis.",
+      cells.length ? withTable(box, ["Day", "Band", "Bolas"],
+        cells.map(function (c) {
+          return [["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][c.dow],
+                  String(c.band), num(c.n)];
+        })) : null));
+
+    var dist = lq.districts || [];
+    cards.appendChild(card("Where", null, dist.length
+      ? withTable(columns(dist.map(function (x) {
+          return { label: x.district, value: x.n };
+        })), ["District", "Bolas"],
+        dist.map(function (x) { return [x.district, num(x.n)]; }))
+      : null));
+    s.appendChild(cards);
+    return s;
+  }
+
+  function deltaOf(now, prev) {
+    if (now === null || now === undefined || prev === null || prev === undefined) {
+      return null;
+    }
+    var diff = now - prev;
+    if (Math.abs(diff) < 0.05) return { dir: "", text: "level on the previous window" };
+    return { dir: diff > 0 ? "up" : "down",
+             text: (diff > 0 ? "↑ " : "↓ ") + Math.abs(diff).toFixed(1) +
+                   " pts vs the window before" };
+  }
+
+  function boardD(d) {
+    var r = d.retention || {};
+    var s = section("d", "Retention",
+      "The board that decides the roadmap. One split on it is worth more " +
+      "than every other number here.");
+    var grid = r.grid || [];
+    var weeks = Math.min(8, Math.max(1, Math.floor((d.window.days || 90) / 7)));
+    var cards = el("div", "cards");
+    cards.appendChild(card("Cohort grid",
+      "Reading down a column compares cohorts at the same age, which is the " +
+      "only honest way to ask whether the product is improving. Blank cells " +
+      "are weeks that have not happened yet, not zeroes.",
+      grid.length ? withTable(cohortGrid(grid, weeks),
+        ["Cohort", "Size", "Week 1", "Week 2", "Week 4"],
+        grid.map(function (g) {
+          var at = function (n) {
+            var w = (g.weeks || []).filter(function (x) { return x.w === n; })[0];
+            return w && g.size ? Math.round(100 * w.people / g.size) + "%" : "—";
+          };
+          return [shortDay(g.cohort), num(g.size), at(1), at(2), at(4)];
+        })) : null));
+
+    var sp = r.split || {};
+    var comm = sp.community || [], solo = sp.scorekeeper || [];
+    var n = Math.max(comm.length, solo.length);
+    var labels = [];
+    for (var i = 0; i < n; i++) labels.push("W" + i);
+    var pick = function (arr) {
+      return labels.map(function (_, i) {
+        var v = arr.filter(function (x) { return x.w === i; })[0];
+        return { y: v ? Number(v.pct) : null };
+      });
+    };
+    var split = n ? lines([
+      { name: "joined a bola", points: pick(comm) },
+      { name: "scorekeeper only", points: pick(solo) }
+    ], labels, { percent: true, max: 100 }) : null;
+    var splitBox = el("div");
+    if (split) {
+      splitBox.appendChild(split);
+      splitBox.appendChild(keys([["c1", "Joined a bola (" + num(sp.communitySize) + ")"],
+                                 ["c2", "Scorekeeper only (" + num(sp.scorekeeperSize) + ")"]]));
+    }
+    cards.appendChild(card("The split that decides the roadmap",
+      "If the gap is wide, the scorekeeper is the on-ramp and the community " +
+      "is the product, and everything else follows from that.",
+      n ? withTable(splitBox, ["Week", "Joined a bola", "Scorekeeper only"],
+        labels.map(function (l, i) {
+          var a = comm.filter(function (x) { return x.w === i; })[0];
+          var b = solo.filter(function (x) { return x.w === i; })[0];
+          return [l, a ? a.pct + "%" : "—", b ? b.pct + "%" : "—"];
+        })) : null));
+    s.appendChild(cards);
+    return s;
+  }
+
+  function boardE(d) {
+    var a = d.activation || [];
+    var s = section("e", "Activation",
+      "Whether the scorekeeper converts to the community — the product " +
+      "thesis, asked of each sign-up cohort rather than of everybody at once.");
+    var labels = a.map(function (c) { return shortDay(c.cohort); });
+    var mk = function (key) {
+      return labels.map(function (_, i) {
+        var c = a[i];
+        return { y: c && c.size ? 100 * c[key] / c.size : null };
+      });
+    };
+    var node = a.length ? lines([
+      { name: "made a game", points: mk("madeGame") },
+      { name: "finished one", points: mk("finished") },
+      { name: "joined a bola", points: mk("joinedBola") }
+    ], labels, { percent: true, max: 100 }) : null;
+    var box = el("div");
+    if (node) {
+      box.appendChild(node);
+      box.appendChild(keys([["c1", "Made a game (24h)"], ["c2", "Finished one (7d)"],
+                            ["c3", "Joined a bola (7d)"]]));
+    }
+    s.appendChild(card("By sign-up cohort",
+      "The question is not what the conversion is, but whether it is " +
+      "improving. Each point is a cohort, not a week of traffic.",
+      a.length ? withTable(box,
+        ["Cohort", "Size", "Made a game", "Finished", "Joined a bola", "Rated"],
+        a.map(function (c) {
+          var p = function (v) { return c.size ? Math.round(100 * v / c.size) + "%" : "—"; };
+          return [shortDay(c.cohort), num(c.size), p(c.madeGame), p(c.finished),
+                  p(c.joinedBola), p(c.ratedBola)];
+        })) : null));
+    return s;
+  }
+
+  function boardF(d) {
+    var g = d.growth || {};
+    var s = section("f", "Growth",
+      "Where people come from, and whether the product brings its own.");
+
+    var acc = (g.accounts || []).map(function (x) {
+      return { label: shortDay(x.day), value: Number(x.value) };
+    });
+    var store = g.store || [];
+    var totalInstalls = store.reduce(function (a, x) { return a + (x.installs || 0); }, 0);
+    var totalSignups = acc.reduce(function (a, x) { return a + x.value; }, 0);
+    var invited = (g.invited || []).reduce(function (a, x) { return a + Number(x.value); }, 0);
+
+    var t = el("div", "tiles");
+    t.appendChild(tile(num(totalSignups), "new accounts"));
+    t.appendChild(tile(store.length ? num(totalInstalls) : "—", "installs (Play)"));
+    t.appendChild(tile(totalInstalls ? (100 * totalSignups / totalInstalls).toFixed(1) + "%"
+      : "—", "installs that registered"));
+    t.appendChild(tile(totalSignups ? (100 * invited / totalSignups).toFixed(0) + "%"
+      : "—", "arrived via an invite", invited ? "good" : ""));
+    s.appendChild(t);
+
+    var cards = el("div", "cards");
+    cards.style.marginTop = "14px";
+    cards.appendChild(card("Registrations · your database",
+      "Accounts created, by day.",
+      acc.length ? withTable(columns(acc, { cls: "f1" }), ["Day", "Accounts"],
+        acc.map(function (x) { return [x.label, num(x.value)]; })) : null));
+
+    var inst = store.map(function (x) {
+      return { label: shortDay(x.day), value: x.installs || 0 };
+    });
+    cards.appendChild(card("Installs · Google Play",
+      "A separate chart on a separate scale, deliberately. Drawing these two " +
+      "on one pair of axes would invent a correlation between numbers that " +
+      "cannot be joined at the row level — no individual is traced across " +
+      "the boundary, so this is a ratio to state and never a funnel to draw.",
+      inst.length ? withTable(columns(inst, { cls: "f2" }), ["Day", "Installs"],
+        inst.map(function (x) { return [x.label, num(x.value)]; })) : null));
+    s.appendChild(cards);
+
+    var src = {};
+    (g.sources || []).forEach(function (x) {
+      src[x.dim] = (src[x.dim] || 0) + Number(x.value);
+    });
+    var srcRows = Object.keys(src).map(function (k) {
+      return { label: k, value: src[k] };
+    }).sort(function (a, b) { return b.value - a.value; });
+    if (srcRows.length) {
+      var box = el("div");
+      box.style.marginTop = "14px";
+      box.appendChild(card("Where sign-ups came from",
+        "Written by the app at the moment the account was made, first write " +
+        "winning, so a later screen cannot overwrite the link that actually " +
+        "brought somebody in.",
+        withTable(funnel(srcRows), ["Source", "Accounts"],
+          srcRows.map(function (x) { return [x.label, num(x.value)]; }))));
+      s.appendChild(box);
+    }
+    return s;
+  }
+
+  function boardG(d) {
+    var tr = d.trust || {};
+    var s = section("g", "Trust and safety",
+      "Whether the community is healthy, and whether you are holding up " +
+      "your end of it.");
+    var p = tr.pipeline || {};
+    var t = el("div", "tiles");
+    t.appendChild(tile(tr.reportsPerThousandBolas === null ||
+      tr.reportsPerThousandBolas === undefined ? "—"
+      : Number(tr.reportsPerThousandBolas).toFixed(1), "reports per 1,000 bolas"));
+    t.appendChild(tile(hours(tr.medianDecisionHours), "median time to decide"));
+    t.appendChild(tile(num(tr.repeatSubjects), "people reported more than once"));
+    t.appendChild(tile(num(tr.suspendedNow), "suspended right now"));
+    s.appendChild(t);
+
+    var rows = [
+      { label: "Raised", value: p.raised || 0 },
+      { label: "Corroborated", value: p.corroborated || 0 },
+      { label: "Disputed", value: p.disputed || 0 },
+      { label: "Settled", value: p.settled || 0 }
+    ];
+    var cards = el("div", "cards");
+    cards.style.marginTop = "14px";
+    cards.appendChild(card("The allegation pipeline",
+      "Corroboration and dispute are separate columns, not states: an " +
+      "allegation can be corroborated and still open, and a disputed one " +
+      "never validates on its own however long it waits. " +
+      (p.bySilence ? p.bySilence + " settled by silence rather than by " +
+        "anybody agreeing, which is the other half of the rule." : ""),
+      withTable(funnel(rows), ["Stage", "Allegations"],
+        rows.map(function (r) { return [r.label, num(r.value)]; }))));
+
+    var rr = tr.reportsByReason || [];
+    cards.appendChild(card("Why people report", null, rr.length
+      ? withTable(funnel(rr.map(function (x) {
+          return { label: x.reason.replace(/_/g, " "), value: x.n };
+        })), ["Reason", "Reports"],
+        rr.map(function (x) { return [x.reason.replace(/_/g, " "), num(x.n)]; }))
+      : null));
+    s.appendChild(cards);
+    return s;
+  }
+
+  function boardH(d) {
+    var pr = d.product || {}, pu = d.push || {};
+    var s = section("h", "Product and delivery",
+      "What the app is used for, and whether the plumbing is alive over " +
+      "time rather than only right now.");
+
+    var byType = pr.byType || [];
+    var monthsMap = {}, typeSet = {};
+    byType.forEach(function (x) {
+      var m = x.day.slice(0, 7);
+      monthsMap[m] = monthsMap[m] || {};
+      monthsMap[m][x.dim] = (monthsMap[m][x.dim] || 0) + Number(x.value);
+      typeSet[x.dim] = true;
+    });
+    var months = Object.keys(monthsMap).sort();
+    var types = Object.keys(typeSet).sort();
+    var mixNode = null, mixBox = el("div");
+    if (months.length && types.length) {
+      mixNode = stacked(months.map(function (m) {
+        return new Date(m + "-01T00:00:00Z")
+          .toLocaleDateString(undefined, { month: "short" });
+      }), types.slice(0, 3).map(function (t) {
+        return { name: t, values: months.map(function (m) { return monthsMap[m][t] || 0; }) };
+      }));
+      mixBox.appendChild(mixNode);
+      mixBox.appendChild(keys(types.map(function (t, i) {
+        return ["c" + (i + 1), t];
+      })));
+    }
+
+    var cards = el("div", "cards");
+    cards.appendChild(card("What the app is used for",
+      "Derived from the payload rather than written beside it, so the split " +
+      "cannot drift from the games it describes.",
+      months.length ? withTable(mixBox, ["Month"].concat(types),
+        months.map(function (m) {
+          return [m].concat(types.map(function (t) { return num(monthsMap[m][t] || 0); }));
+        })) : null));
+
+    var ev = pu.events || [], ca = pu.calls || [];
+    var byDay = {};
+    ev.forEach(function (x) { byDay[x.day] = byDay[x.day] || {}; byDay[x.day].e = Number(x.value); });
+    ca.forEach(function (x) { byDay[x.day] = byDay[x.day] || {}; byDay[x.day].c = Number(x.value); });
+    var pdays = Object.keys(byDay).sort();
+    var pushNode = pdays.length ? lines([
+      { name: "written", points: pdays.map(function (k) {
+          return { y: byDay[k].e === undefined ? null : byDay[k].e }; }) },
+      { name: "attempted", points: pdays.map(function (k) {
+          return { y: byDay[k].c === undefined ? null : byDay[k].c }; }) }
+    ], pdays.map(shortDay), { height: 120 }) : null;
+    var pushBox = el("div");
+    if (pushNode) {
+      pushBox.appendChild(pushNode);
+      pushBox.appendChild(keys([["c1", "Notifications written"],
+                                ["c2", "Deliveries attempted"]]));
+    }
+    cards.appendChild(card("Is push actually being delivered",
+      "The failure worth catching is not a failure rate: it is the written " +
+      "line climbing while the attempted line stays flat. Nothing fails, " +
+      "because nothing is tried, and no error exists anywhere for that state.",
+      pdays.length ? withTable(pushBox, ["Day", "Written", "Attempted"],
+        pdays.map(function (k) {
+          return [shortDay(k), num(byDay[k].e), num(byDay[k].c)];
+        })) : null));
+    s.appendChild(cards);
+
+    var t = el("div", "tiles");
+    t.style.marginTop = "14px";
+    t.appendChild(tile(num(pr.finished), "games finished"));
+    t.appendChild(tile(num(pr.abandoned), "started and left", pr.abandoned ? "bad" : ""));
+    var deaths = (pu.deaths || []).reduce(function (a, x) { return a + Number(x.value); }, 0);
+    t.appendChild(tile(num(deaths), "devices that dropped the app"));
+    s.appendChild(t);
+    s.appendChild(el("p", "note",
+      "Device drop-offs come from FCM refusing a token, so they cover only " +
+      "accounts that had notifications on, and they lag by days — a token " +
+      "is not reported dead until something is next sent to it."));
+    return s;
+  }
+
+  // ------------------------------------------------------------- loading
+  function load() {
+    if (loading) return;
+    loading = true;
+    $("err").textContent = "";
+    // Hold the previous render at reduced opacity rather than flashing a
+    // skeleton: no layout jump, and the old numbers stay readable.
+    $("boards").classList.add("stale");
+    sb.rpc("dashboard", { p_days: days }).then(function (res) {
+      loading = false;
+      $("boards").classList.remove("stale");
+      if (res.error) {
+        var m = (res.error.message || "").toLowerCase();
+        $("err").textContent = m.indexOf("moderator") >= 0
+          ? "This account is not a moderator, so the database refused the " +
+            "request. Add its id to public.moderators and reload."
+          : m.indexOf("not signed in") >= 0
+          ? "The session expired. Sign in again."
+          : "Could not read the numbers: " + res.error.message;
+        return;
+      }
+      data = res.data;
+      render(data);
+    });
+  }
+
+  // ------------------------------------------------------------- session
+  function showBoard(on) {
+    $("board").hidden = !on;
+    $("gate").hidden = on;
+  }
+
+  sb.auth.onAuthStateChange(function (_evt, session) {
+    if (session) { showBoard(true); load(); } else { showBoard(false); }
+  });
+
+  sb.auth.getSession().then(function (r) {
+    if (r.data && r.data.session) { showBoard(true); load(); }
+    else { showBoard(false); }
+  });
+
+  $("google").addEventListener("click", function () {
+    sb.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.href.split("#")[0] }
+    });
+  });
+
+  $("magic").addEventListener("click", function () {
+    var addr = $("email").value.trim();
+    var m = $("gateMsg");
+    if (!addr) { m.className = "msg err"; m.textContent = "Enter an email address first."; return; }
+    m.className = "msg"; m.textContent = "Sending…";
+    sb.auth.signInWithOtp({
+      email: addr,
+      options: { emailRedirectTo: window.location.href.split("#")[0] }
+    }).then(function (r) {
+      if (r.error) {
+        m.className = "msg err";
+        m.textContent = "Could not send it: " + r.error.message;
+      } else {
+        m.className = "msg ok";
+        m.textContent = "Sent. The link signs you in on this page.";
+      }
+    });
+  });
+
+  $("signout").addEventListener("click", function () {
+    sb.auth.signOut().then(function () { showBoard(false); });
+  });
+  $("reload").addEventListener("click", load);
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".filters button[data-days]"), function (b) {
+      b.addEventListener("click", function () {
+        days = Number(b.dataset.days);
+        Array.prototype.forEach.call(
+          document.querySelectorAll(".filters button[data-days]"), function (o) {
+            o.setAttribute("aria-pressed", String(o === b));
+          });
+        load();
+      });
+    });
+})();
+</script>
+</body>
+</html>
