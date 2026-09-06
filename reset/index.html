@@ -1,0 +1,168 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Yalla Bola &mdash; Choose a new password</title><style>
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f4; --surface: #fff; --text: #14171e;
+  --dim: #5d6270; --line: #e2dcd0; --accent: #a8761e;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1116; --surface: #171b23; --text: #e9e6df;
+    --dim: #8e96a6; --line: #2b313d; --accent: #d9a441;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 40px 20px; background: var(--bg); color: var(--text);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+main { max-width: 40rem; margin: 0 auto; }
+h1 { font-size: 1.85rem; line-height: 1.2; margin: 0 0 1.6rem; }
+h2 {
+  font-size: .8rem; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--accent); margin: 2.5rem 0 .6rem;
+}
+p, li { color: var(--text); }
+ul { padding-left: 1.15rem; }
+li { margin: .35rem 0; }
+blockquote {
+  background: var(--surface); border: 1px solid var(--line);
+  border-left: 3px solid var(--accent); border-radius: 8px;
+  margin: 1.5rem 0; padding: .95rem 1.15rem;
+}
+blockquote p { margin: 0 0 .7rem; }
+blockquote p:last-child { margin-bottom: 0; }
+code {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: .1rem .3rem; font-size: .9em;
+}
+a { color: var(--accent); }
+footer {
+  margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line);
+  color: var(--dim); font-size: .85rem;
+}
+</style></head><body><main><h1 id="head">Choose a new password</h1>
+<div id="body"><p>One moment&hellip;</p></div>
+
+<form id="form" style="display:none">
+  <p>
+    <label for="pw"><strong>New password</strong></label><br>
+    <input id="pw" type="password" autocomplete="new-password" minlength="8"
+           style="width:100%;max-width:22rem;padding:.6rem .7rem;font-size:1rem;
+                  border:1px solid var(--line);border-radius:8px;
+                  background:var(--surface);color:var(--text)">
+  </p>
+  <p>
+    <label for="pw2"><strong>Type it again</strong></label><br>
+    <input id="pw2" type="password" autocomplete="new-password" minlength="8"
+           style="width:100%;max-width:22rem;padding:.6rem .7rem;font-size:1rem;
+                  border:1px solid var(--line);border-radius:8px;
+                  background:var(--surface);color:var(--text)">
+  </p>
+  <p id="err" style="color:#a83440"></p>
+  <p>
+    <button id="go" type="submit"
+            style="padding:.65rem 1.3rem;font-size:1rem;font-weight:600;
+                   border:0;border-radius:8px;background:var(--accent);
+                   color:#fff;cursor:pointer">Set the password</button>
+  </p>
+  <p style="color:var(--dim);font-size:.9rem">
+    At least 8 characters. You will sign in with it in the app.
+  </p>
+</form>
+
+<footer>Yalla Bola &middot; <a href="mailto:support@yallabola.app">support@yallabola.app</a></footer></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
+<script>
+// The recovery token arrives in the URL fragment, which never reaches a
+// server -- so finishing a password reset has to happen in the page or
+// in the app. It cannot yet happen in the app: that needs an https App
+// Link, which needs an assetlinks file signed with Play's key, which
+// does not exist until the first upload. This works today.
+//
+// The anon key below is publishable. It ships inside every copy of the
+// app already, and row-level security is the actual boundary.
+(function () {
+  var head = document.getElementById('head');
+  var body = document.getElementById('body');
+  var form = document.getElementById('form');
+  var err  = document.getElementById('err');
+
+  function fail(title, msg) {
+    head.textContent = title;
+    body.innerHTML = '<p>' + msg + '</p>';
+    form.style.display = 'none';
+  }
+
+  if (!window.supabase) {
+    return fail('Something is missing',
+      'This page could not load. Write to ' +
+      '<a href="mailto:support@yallabola.app">support@yallabola.app</a> ' +
+      'and we will reset it for you.');
+  }
+
+  var client = window.supabase.createClient(
+    "https://lqowpeblmtwylerujkje.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3dwZWJsbXR3eWxlcnVqa2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5OTAzODAsImV4cCI6MjEwMjU2NjM4MH0.CPKLHtXjUViMxypMz5xoCRjsovZaYRuzNZ-tmYuQY_8", { auth: { detectSessionInUrl: true, flowType: 'implicit' } });
+
+  var p = new URLSearchParams(location.hash.slice(1));
+  var e = p.get('error_description') || p.get('error');
+  if (e) {
+    var expired = /expired/i.test(e) || /expired/i.test(p.get('error_code') || '');
+    return fail(
+      expired ? 'That link has expired' : 'That link did not work',
+      expired
+        ? 'Reset links do not last forever. Open the app, tap <strong>' +
+          'Forgot your password?</strong> again, and use the new one ' +
+          'straight away.'
+        : String(e).replace(/[<>&]/g, ''));
+  }
+
+  // detectSessionInUrl consumes the fragment asynchronously, so the
+  // session is not there on the first tick. Waiting for the event is
+  // more reliable than guessing a delay.
+  var ready = false;
+  client.auth.onAuthStateChange(function (event, session) {
+    if (ready || !session) return;
+    ready = true;
+    head.textContent = 'Choose a new password';
+    body.innerHTML = '<p>Almost done. Pick something you have not used ' +
+      'elsewhere.</p>';
+    form.style.display = 'block';
+  });
+
+  setTimeout(function () {
+    if (ready) return;
+    client.auth.getSession().then(function (r) {
+      if (r.data && r.data.session) return;
+      fail('This link is not a password reset',
+        'It may have been used already, or opened in a different browser ' +
+        'from the one that asked. Open the app, tap <strong>Forgot your ' +
+        'password?</strong>, and use the newest email.');
+    });
+  }, 2500);
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    err.textContent = '';
+    var a = document.getElementById('pw').value;
+    var b = document.getElementById('pw2').value;
+    if (a.length < 8) { err.textContent = 'At least 8 characters.'; return; }
+    if (a !== b) { err.textContent = 'Those two do not match.'; return; }
+
+    var go = document.getElementById('go');
+    go.disabled = true; go.textContent = 'Setting it…';
+    client.auth.updateUser({ password: a }).then(function (r) {
+      if (r.error) {
+        go.disabled = false; go.textContent = 'Set the password';
+        err.textContent = r.error.message;
+        return;
+      }
+      head.textContent = 'That is done';
+      body.innerHTML = '<p><strong>Your password is changed.</strong> Open ' +
+        'Yalla Bola and sign in with it.</p><p>You can close this page.</p>';
+      form.style.display = 'none';
+    });
+  });
+})();
+</script>
+</body></html>

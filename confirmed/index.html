@@ -58,25 +58,14 @@ footer {
   var head = document.getElementById('head');
   var body = document.getElementById('body');
 
-  // A password reset lands here too, because resetPasswordForEmail is
-  // called without a redirectTo and Supabase falls back to the Site URL.
-  // Telling somebody their email is confirmed when they asked to reset a
-  // password is worse than telling them nothing: they close the page
-  // believing it worked, and it did not.
-  //
-  // Setting the new password still has nowhere to happen. Saying so is
-  // the honest half of the fix; the form is the other half and is next.
+  // A password reset used to land here, because resetPasswordForEmail
+  // had no redirectTo and Supabase fell back to the Site URL. It now
+  // goes to /reset/, which can actually finish the job. Anything still
+  // arriving here with a recovery type is an old link from an email sent
+  // before that change, so it is sent on rather than left confused.
   var type = p.get('type') || new URLSearchParams(location.search).get('type');
   if (!err && type === 'recovery') {
-    head.textContent = 'Password reset is not finished yet';
-    body.innerHTML =
-      '<p>This link came from a <strong>reset your password</strong> ' +
-      'request, and the screen that lets you choose a new one is still ' +
-      'being built.</p>' +
-      '<p>Write to <a href="mailto:support@yallabola.app">' +
-      'support@yallabola.app</a> and we will sort your account out by ' +
-      'hand. Sorry &mdash; that is not a good answer, and it is a ' +
-      'temporary one.</p>';
+    location.replace('/reset/' + location.hash);
     return;
   }
 
