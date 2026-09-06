@@ -215,7 +215,7 @@ tr:last-child td{border-bottom:none}
     </div>
   </header>
 
-  <p class="caveat" id="caveat"></p>
+  <p class="caveat" id="caveat" hidden></p>
   <p class="msg err" id="err"></p>
 
   <div id="boards"></div>
@@ -647,6 +647,7 @@ tr:last-child td{border-bottom:none}
   function render(d) {
     var root = $("boards");
     root.innerHTML = "";
+    $("caveat").hidden = false;
     $("caveat").textContent = d.caveat +
       (d.loggingSince ? "  Behaviour has been recorded since " +
         shortDay(d.loggingSince) + "; nothing before that is in this database."
@@ -1107,7 +1108,16 @@ tr:last-child td{border-bottom:none}
       $("boards").classList.remove("stale");
       if (res.error) {
         var m = (res.error.message || "").toLowerCase();
-        $("err").textContent = m.indexOf("moderator") >= 0
+        var code = res.error.code || "";
+        $("caveat").hidden = true;
+        $("boards").innerHTML = "";
+        $("err").textContent =
+          (code === "PGRST202" || m.indexOf("could not find the function") >= 0)
+          ? "The database does not have the dashboard functions yet. Run " +
+            "migrations 0031 to 0035 in the SQL editor, then " +
+            "select public.roll_up_backfill(); and reload this page. " +
+            "Nothing is wrong with the page or your account."
+          : m.indexOf("moderator") >= 0
           ? "This account is not a moderator, so the database refused the " +
             "request. Add its id to public.moderators and reload."
           : m.indexOf("not signed in") >= 0
