@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.amrkhalifa.bola",
+      "sha256_cert_fingerprints": [
+        "A9:0E:D6:3D:E6:0C:C9:EA:E0:06:C8:D7:42:67:76:D7:B2:5B:F2:FB:3C:8B:84:B8:D1:61:C4:D7:4F:F0:22:70"
+      ]
+    }
+  }
+]
