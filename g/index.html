@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Open this bola — Yalla Bola</title>
+<title>Open this in Yalla Bola</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="../icon.png">
 <style>
@@ -35,27 +35,34 @@
   <div class="mark">
     <img src="../icon.png" alt="">
     <div>
-      <h1>Open this bola</h1>
-      <p class="tag" id="sub">Someone shared a Yalla Bola score sheet with you.</p>
+      <h1>Open this in Yalla Bola</h1>
+      <!-- Kind-agnostic on purpose: this page is static and cannot know
+           whether the code is a bola or a tournament without asking the
+           server, and the app asks that question itself — it tries a bola
+           first, then a tournament. A page that guessed would be wrong for
+           one of the two, in front of somebody who has never seen the app. -->
+      <p class="tag" id="sub">Somebody sent you a bola or a tournament to follow.</p>
     </div>
   </div>
 
   <div class="card" id="open">
     <h2>On a phone with the app</h2>
-    <p>Tap below and Yalla Bola opens the bola.</p>
+    <p>Tap below and Yalla Bola opens it.</p>
     <a class="btn" id="openBtn" href="#">Open in Yalla Bola</a>
     <p class="note">Nothing happened? The app is not on this phone yet — see below.</p>
   </div>
 
   <div class="card">
     <h2>Don't have the app?</h2>
-    <p>Install it, then come back to this link.</p>
+    <p>Install it, then come back to this link. You do not need an account
+       to follow a bola or a tournament.</p>
     <a class="btn quiet" href="../">Get Yalla Bola</a>
   </div>
 
   <div class="card" id="code" hidden>
     <h2>Or paste the code</h2>
-    <p>In Yalla Bola: menu → <b>Open a shared bola</b> → paste:</p>
+    <p>First time opening the app, it asks for the code. After that:
+       menu → <b>Paste a shared code</b>.</p>
     <p class="tok" id="tok"></p>
   </div>
 </main>
@@ -75,7 +82,7 @@
     // before it is read, and if it is not, the page explains itself.
     setTimeout(function () { location.href = app; }, 350);
   } else {
-    document.getElementById('sub').textContent = 'This link is missing its code. Ask for it again.';
+    document.getElementById('sub').textContent = 'This link is missing its code. Ask whoever sent it for a new one.';
     document.getElementById('open').hidden = true;
   }
 </script>
